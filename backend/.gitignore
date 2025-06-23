@@ -1,0 +1,14 @@
+/.env
+/.venv
+/requirements_initial.txt
+/.vscode
+/.idea
+/.pytest_cache
+__pycache__/
+app/__pycache__/main.cpython-312.pyc
+app/__pycache__/main.cpython-312.pyc
+app/api/__pycache__/endpoints.cpython-312.pyc
+app/llm/__pycache__/entity_extraction.cpython-312.pyc
+app/models/__pycache__/schemas.cpython-312.pyc
+app/ocr/__pycache__/ocr_utils.cpython-312.pyc
+app/vector_db/__pycache__/vector_search.cpython-312.pyc

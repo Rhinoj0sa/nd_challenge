@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: .
+    container_name: appfe
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ../../backend  # Adjust this path to your FastAPI backend directory
+    container_name: fastapi-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    # Add volumes or command if needed for your backend
+
+# Networks are optional, Docker Compose will create a default network
