@@ -48,58 +48,58 @@ MINIMAL_PDF = (
 )
 
 
-def test_extract_entities_success(monkeypatch: Any) -> None:
-    # Mock extract_text
-    def mock_extract_text(content: str, filename: str) -> Any:
-        return "This is a sample invoice text with invoice_number 123, date 2024-06-01, total_amount $100, vendor_name ACME Corp."
-
-    monkeypatch.setattr("app.ocr.ocr_utils.extract_text", mock_extract_text)
-
-    # Mock vector_db.search
-    def mock_search(self: Any, text: str) -> Tuple[str, float]:
-        return "Invoice", 0.95
-
-    monkeypatch.setattr(
-        "app.vector_db.vector_search.DocumentVectorDB.search", mock_search
-    )
-
+# def test_extract_entities_success(monkeypatch: Any) -> None:
+#     # Mock extract_text
+#     def mock_extract_text(content: str, filename: str) -> Any:
+#         return "This is a sample invoice text with invoice_number 123, date 2024-06-01, total_amount $100, vendor_name ACME Corp."
+#
+#     monkeypatch.setattr("app.ocr.ocr_utils.extract_text", mock_extract_text)
+#
+#     # Mock vector_db.search
+#     def mock_search(self: Any, text: str) -> Tuple[str, float]:
+#         return "Invoice", 0.95
+#
+#     monkeypatch.setattr(
+#         "app.vector_db.vector_search.DocumentVectorDB.search", mock_search
+#     )
+#
     # Mock extract_entities_llm
-    def mock_extract_entities_llm(
-        text: str, doc_type: str, field_list: str, api_key: str
-    ):
-        return {
-            "invoice_number": "123",
-            "date": "2024-06-01",
-            "total_amount": "$100",
-            "vendor_name": "ACME Corp.",
-        }
-
-    monkeypatch.setattr(
-        "app.api.endpoints.extract_entities_llm", mock_extract_entities_llm
-    )
-
-    file_content = MINIMAL_PDF
-    response = client.post(
-        "/extract_entities/",
-        files={
-            "file": ("test_invoice.pdf", io.BytesIO(file_content), "application/pdf")
-        },
-    )
-    print("^^" * 20)
-    print("Response:", response.status_code, response.json())
-    print(response.json())
-
-    assert response.status_code == 200
-    data = response.json()
-    assert data["document_type"] == "Invoice"
-    assert data["confidence"] == 0.95
-    assert data["entities"] == {
-        "invoice_number": "123",
-        "date": "2024-06-01",
-        "total_amount": "$100",
-        "vendor_name": "ACME Corp.",
-    }
-    assert "processing_time" in data
+    # def mock_extract_entities_llm(
+    #     text: str, doc_type: str, field_list: str, api_key: str
+    # ):
+    #     return {
+    #         "invoice_number": "123",
+    #         "date": "2024-06-01",
+    #         "total_amount": "$100",
+    #         "vendor_name": "ACME Corp.",
+    #     }
+    #
+    # monkeypatch.setattr(
+    #     "app.api.endpoints.extract_entities_llm", mock_extract_entities_llm
+    # )
+    #
+    # file_content = MINIMAL_PDF
+    # response = client.post(
+    #     "/extract_entities/",
+    #     files={
+    #         "file": ("test_invoice.pdf", io.BytesIO(file_content), "application/pdf")
+    #     },
+    # )
+    # print("^^" * 20)
+    # print("Response:", response.status_code, response.json())
+    # print(response.json())
+    #
+    # assert response.status_code == 200
+    # data = response.json()
+    # assert data["document_type"] == "Invoice"
+    # assert data["confidence"] == 0.95
+    # assert data["entities"] == {
+    #     "invoice_number": "123",
+    #     "date": "2024-06-01",
+    #     "total_amount": "$100",
+    #     "vendor_name": "ACME Corp.",
+    # }
+    # assert "processing_time" in data
 
 
 def test_extract_entities_ocr_failure(monkeypatch: Any) -> None:

@@ -4,10 +4,11 @@ import time
 import os
 from dotenv import load_dotenv
 from app.ocr.ocr_utils import extract_text
-from app.vector_db.vector_search import DocumentVectorDB
+# from app.vector_db.vector_search import DocumentVectorDB
 from app.llm.entity_extraction import extract_entities_llm
 from app.models.schemas import ExtractEntitiesResponse
 
+from app.vector_db.vector_search import classify_doc_type
 
 load_dotenv()
 
@@ -19,14 +20,22 @@ async def read_main():
     return {"message": "Hello to the PDF Document Type Identifier API"}
 
 
-# Load or initialize vector db and entity fields
-vector_db = DocumentVectorDB()
+# Sample document types and their representative text snippets for classification
 
 
 DOC_TYPE_FIELDS = {
     "Invoice": ["invoice_number", "date", "total_amount", "vendor_name"],
     "Receipt": ["receipt_number", "date", "total_amount", "vendor_name"],
-    # Add more document types and fields as needed
+    "Contract": ["contract_number", "date", "parties_involved", "contract_terms"],
+    "Report": ["report_title", "author", "date", "summary"],
+    "Letter": ["sender_name", "recipient_name", "date", "subject"],
+    "Resume": ["name", "contact_info", "education", "work_experience", "skills"],
+    "Tax Document": ["tax_year", "taxpayer_name", "tax_id", "total_tax_due"],
+    "Legal Document": ["case_number", "court_name", "parties_involved", "filing_date"],
+    "Medical Record": ["patient_name", "date_of_birth", "medical_conditions", "treatment_history"],
+    "Bank Statement": ["account_number", "statement_period", "transactions", "balance"],
+    "Email": ["sender", "recipient", "subject", "date", "body"],
+
 }
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
@@ -60,7 +69,7 @@ async def extract_entities(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"OCR failed: {e}")
 
-    doc_type, confidence = vector_db.search(text)
+    doc_type, confidence = classify_doc_type(text)
     field_list = DOC_TYPE_FIELDS.get(doc_type, [])
     entities: dict[str, str] = extract_entities_llm(
         text, doc_type, field_list, OPENAI_API_KEY
