@@ -15,30 +15,32 @@ It returns the extracted entities in JSON format.
 # Frontend Manual
 The frontend is a React application that interacts with the FastAPI backend to display extracted entities from PDF files.
 it is really simple and it is just a form that allows the user to upload a PDF file and then displays the extracted entities in a table.
-# Deploying and Running Your FastAPI App with Docker and Secure API Keys
+---
+# Deploying and running with Docker and secure API keys
 
-## 1. Clone the repository
+## 1. Clone the repository:
 To get started, clone the repository containing the FastAPI app and frontend:
 
 ```sh
 git clone git@github.com:Rhinoj0sa/nd_challenge.git
 ```
+---
 ## 2. Set the OpenAI APIkey in a .env file:
 The project uses an OpenAI API key to interact with the OpenAI services. To securely provide this key, you will create a `.env`  with this content:
-
+```sh
 OPENAI_API_KEY=sk-...your-key...
-
+```
 And save the file in the **frontend/appfe** subdir.
 
-## 3. Run the Docker Container
+## 3. Run the Docker Container:
 Run the following command to start your FastAPI app in a Docker container:
 
 ```sh
 docker compose up --build
 ```
-
+---
 Wait for the build to complete. This will set up the FastAPI backend and the frontend React application.
-## 4. Access the API
+## 4. Access the API:
 
 - Open your browser and go to: [http://localhost:8000/docs](http://localhost:8000/docs)
 - Or test with curl:
@@ -49,10 +51,11 @@ Wait for the build to complete. This will set up the FastAPI backend and the fro
 
 ---
 
-## 5. Access the frontend
+## 5. Access the frontend:
+
 Open your browser and go to: [http://localhost:3000](http://localhost:3000)
 
-## 6. Security Tips
+## 6. Security Tips:
 
 - **Never** hardcode your API key in your code or Dockerfile.
 - Add `.env` to your `.gitignore` to avoid committing secrets to version control.
