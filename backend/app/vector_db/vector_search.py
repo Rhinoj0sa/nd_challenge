@@ -96,6 +96,20 @@ _faiss_index = None
 _doc_type_embeddings = None
 
 def _load_model_and_index():
+    """
+    Loads the Sentence Transformer model, document type embeddings, and FAISS index.
+    This function ensures that the model and index are initialized only once for efficiency.
+
+    Global Variables:
+        _sentence_model (SentenceTransformer): The pre-trained Sentence Transformer model.
+        _faiss_index (faiss.IndexFlatIP): The FAISS index for efficient similarity search.
+        _doc_type_embeddings (numpy.ndarray): Precomputed embeddings for document type samples.
+
+    Steps:
+        1. Load the Sentence Transformer model if not already loaded.
+        2. Compute and normalize embeddings for the predefined document type samples if not already done.
+        3. Initialize the FAISS index with the embedding dimensions and add the document type embeddings.
+    """
     global _sentence_model, _faiss_index, _doc_type_embeddings
     if _sentence_model is None:
         _sentence_model = SentenceTransformer('all-MiniLM-L6-v2')
